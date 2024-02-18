@@ -29,7 +29,7 @@ app.get('/token', (req, res) => {
     }
     let expireTime = req.query.expireTime;
     if (!expireTime || expireTime == '') {
-        expireTime = parseInt(expireTime, 10)
+        expireTime = parseInt(expireTime, 360)
     }
     const currentTime = Math.floor(Date.now() / 1000);
     const privilegeExpireTime = currentTime + expireTime;
