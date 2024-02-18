@@ -38,3 +38,5 @@ yarn.lock
 .api_key
 
 # Add any other files or directories you want to ignore
+
+.env
