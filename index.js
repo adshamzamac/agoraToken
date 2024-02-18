@@ -5,8 +5,12 @@ const { RtcTokenBuilder, RtcRole } = require('agora-access-token');
 const app = express();
 
 const port = 8080;
-const appId = '12994c6e707543e68d5638894d04f989';
-const appCertificate = 'e21a388f83034a159f2783889a6d7bcf';
+const dotenv = require("dotenv");
+
+
+dotenv.config();
+const appId = process.env.appId;
+const appCertificate = process.env.appCertificate;
 
 app.get('/token', (req, res) => {
     // const channelName = req.query.channelName;
