@@ -25,7 +25,8 @@ app.get('/token', (req, res) => {
     }
     let uid = req.query.uid;
     if (!uid) {
-        return resp.status(500).json({ 'error': 'uid is required' });
+        // return resp.status(500).json({ 'error': 'uid is required' });
+        uid=0;
 
     }
     let role = RtcRole.SUBSCRIBER;
