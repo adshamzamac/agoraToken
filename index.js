@@ -34,13 +34,10 @@ app.get('/token', verifyToken, (req, res) => {
 
     let uid = req.query.uid;
     if (!uid) {
-<<<<<<< HEAD
         uid = 0;
     }
-=======
         // return resp.status(500).json({ 'error': 'uid is required' });
         uid=0;
->>>>>>> origin/main
 
     let role = RtcRole.SUBSCRIBER;
     if (req.query.role === 'publisher') {
