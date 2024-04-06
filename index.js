@@ -1,51 +1,38 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-const express = require('express');
-const { RtcTokenBuilder, RtcRole } = require('agora-access-token');
+Future<String?> getAgoraToken({
+  required String channelName,
+}) async {
+  // Replace 'your-basic-token' with your actual basic token
+  final basicToken = 'your-basic-token';
 
-const app = express();
+  try {
+    final response = await http.get(
+      Uri.parse('https://repulsive-pig-rugby-shirt.cyclic.app/token?channelName=$channelName'),
+      headers: {'Authorization': 'Bearer $basicToken'},
+    );
 
-const port = 8080;
-const dotenv = require("dotenv");
-
-
-dotenv.config();
-const appId = process.env.appId;
-const appCertificate = process.env.appCertificate;
-
-app.get('/token', (req, res) => {
-    // const channelName = req.query.channelName;
-    // const uid = req.query.uid || 0;
-    // const role = req.query.role || RtcRole.SUBSCRIBER;
-    // const expireTime = req.query.expireTime || 3600;
-
-    // const privilegeExpireTime = (Date.now() / 1000) + expireTime;
-    const channelName = req.query.channelName;
-    if (!channelName) {
-        return resp.status(500).json({ 'error': 'channelName is required' });
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['token'];
+    } else {
+      print('Error: ${response.reasonPhrase}');
     }
-    let uid = req.query.uid;
-    if (!uid) {
-        // return resp.status(500).json({ 'error': 'uid is required' });
-        uid=0;
+  } catch (e) {
+    print('Error: $e');
+  }
 
-    }
-    let role = RtcRole.SUBSCRIBER;
-    if (req.query.role == 'publisher') {
-        role - RtcRole.PUBLISHER;
-    }
-    let expireTime = req.query.expireTime;
-    if (!expireTime || expireTime == '') {
-        expireTime = parseInt(expireTime, 360)
-    }
-    const currentTime = Math.floor(Date.now() / 1000);
-    const privilegeExpireTime = currentTime + expireTime;
+  return null;
+}
 
-    const token = RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channelName, uid, role, privilegeExpireTime);
-
-    res.json({ token });
-});
-
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-});
-
+// Example usage
+void main() async {
+  final channelName = 'myChannel';
+  final agoraToken = await getAgoraToken(channelName: channelName);
+  if (agoraToken != null) {
+    print('Agora token for channel $channelName: $agoraToken');
+  } else {
+    print('Failed to retrieve Agora token');
+  }
+}
